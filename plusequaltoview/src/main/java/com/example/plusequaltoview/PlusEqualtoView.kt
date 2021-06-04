@@ -9,7 +9,7 @@ import android.graphics.Color
 import android.app.Activity
 import android.content.Context
 
-val parts : Int = 4
+val parts : Int = 2
 val scGap : Float = 0.02f / parts
 val delay : Long = 20
 val backColor : Int = Color.parseColor("#BDBDBD")
@@ -52,7 +52,8 @@ fun Canvas.drawEqual(scale : Float, size : Float, paint : Paint) {
     translate(0f, size)
     for (j in 0..1) {
         save()
-        translate(0f, (gap / 2) * (1f  - 2 * j))
+        translate(0f, (gap / 2) * (1f  - 2 * j) * scale.divideScale(1, parts))
+        drawLine(-updatedSize / 2, 0f, updatedSize / 2, 0f, paint)
         restore()
     }
     restore()
