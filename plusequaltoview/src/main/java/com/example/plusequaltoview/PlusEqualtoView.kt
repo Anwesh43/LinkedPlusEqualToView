@@ -228,4 +228,13 @@ class PlusEqualToView(ctx : Context) :View(ctx) {
             }
         }
     }
+
+    companion object {
+
+        fun create(activity : Activity) : PlusEqualToView {
+            val view : PlusEqualToView = PlusEqualToView(activity)
+            activity.setContentView(view)
+            return view
+        }
+    }
 }
