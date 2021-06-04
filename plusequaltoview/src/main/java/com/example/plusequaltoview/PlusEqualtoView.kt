@@ -203,4 +203,27 @@ class PlusEqualToView(ctx : Context) :View(ctx) {
             curr.startUpdating(cb)
         }
     }
+
+    data class Renderer(var view : PlusEqualToView) {
+
+        private val pet : PlusEqualTo = PlusEqualTo(0)
+        private val animator : Animator = Animator(view)
+        private val paint : Paint = Paint(Paint.ANTI_ALIAS_FLAG)
+
+        fun render(canvas : Canvas) {
+            canvas.drawColor(backColor)
+            pet.draw(canvas, paint)
+            animator.animate {
+                pet.update {
+                    animator.stop()
+                }
+            }
+        }
+
+        fun handleTap() {
+            pet.startUpdating {
+                animator.start()
+            }
+        }
+    }
 }
