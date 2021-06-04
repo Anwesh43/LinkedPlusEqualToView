@@ -24,9 +24,55 @@ val colors : Array<Int> = arrayOf(
 }.toTypedArray()
 val strokeFactor : Float = 90f
 val rot : Float = 90f
-val gapFactor : Float = 11.2f
+val gapFactor : Float = 5.2f
+val sizeFactor : Float = 4.2f
 
 fun Int.inverse() : Float = 1f / this
 fun Float.maxScale(i : Int, n : Int) : Float = Math.max(0f, this - i * n.inverse())
 fun Float.divideScale(i : Int, n : Int) : Float = Math.min(n.inverse(), maxScale(i, n)) * n
 fun Float.sinify() : Float = Math.sin(this * Math.PI).toFloat()
+
+fun Canvas.drawPlus(scale : Float, size : Float, paint : Paint) {
+    val updatedSize : Float = size * scale.divideScale(0, parts)
+    save()
+    translate(0f, -size)
+    for (j in 0..1) {
+        save()
+        rotate(rot * j * scale.divideScale(1, parts))
+        drawLine(-updatedSize / 2, 0f, updatedSize / 2, 0f, paint)
+        restore()
+    }
+    restore()
+}
+
+fun Canvas.drawEqual(scale : Float, size : Float, paint : Paint) {
+    val updatedSize : Float = size * scale.divideScale(0, parts)
+    val gap : Float = size / gapFactor
+    save()
+    translate(0f, size)
+    for (j in 0..1) {
+        save()
+        translate(0f, (gap / 2) * (1f  - 2 * j))
+        restore()
+    }
+    restore()
+}
+
+fun Canvas.drawPlusEqualTo(scale : Float, w : Float, h : Float, paint : Paint) {
+    val size : Float = Math.min(w, h) / sizeFactor
+    val sf : Float = scale.sinify()
+    save()
+    translate(w / 2,  h / 2)
+    drawPlus(sf, size, paint)
+    drawEqual(sf, size, paint)
+    restore()
+}
+
+fun Canvas.drawPETNode(i : Int, scale : Float, paint : Paint) {
+    val w : Float = width.toFloat()
+    val h : Float = height.toFloat()
+    paint.color = colors[i]
+    paint.strokeCap = Paint.Cap.ROUND
+    paint.strokeWidth = Math.min(w, h) / strokeFactor
+    drawPlusEqualTo(scale, w, h, paint)
+}
